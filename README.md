@@ -16,7 +16,8 @@ Code and documentation for the [Aurora Shanty](http://aurora-shanty.tumblr.com/)
 * `curl https://processing.org/download/install-arm.sh | sudo sh`
 * `cd /home/pi && git clone https://github.com/scanlime/fadecandy.git`
 * `cd /home/pi && git clone https://github.com/zzolo/aurora-shanty.git && cd aurora-shanty`
-* `sudo cp ./deploy/fcserver.conf /etc/init/fcserver.conf`
+* `sudo cp ./deploy/fcserver.conf /etc/init.d/fcserver && sudo chmod +x /etc/init.d/fcserver`
+* `sudo /etc/init.d/fcserver start`
 
 
 ## Notes/links
