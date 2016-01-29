@@ -5,6 +5,7 @@ fcserver*.zip
 node_modules/
 components/
 bower_components/
+npm-debug.log
 .npm-debug
 .npm-log
 .env

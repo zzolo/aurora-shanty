@@ -1,84 +1,41 @@
-class Ring
-{
-  float x, y, size, intensity, hue;
+// NOTES
+// * Pixel value
+// * Lights blur next to each other (blue light, red light has purple between them)
+// * Transparency dims
+// * Horizontal movement is nice
 
-  void respawn(float x1, float y1, float x2, float y2)
-  {
-    // Start at the newer mouse position
-    x = x2;
-    y = y2;
-    
-    // Intensity is just the distance between mouse points
-    intensity = dist(x1, y1, x2, y2);
-    
-    // Hue is the angle of mouse movement, scaled from -PI..PI to 0..100
-    hue = map(atan2(y2 - y1, x2 - x1), -PI, PI, 0, 100);
-
-  // Default size is based on the screen size
-    size = height * 0.1;
-  }
-
-  void draw()
-  {
-    // Particles fade each frame
-    intensity *= 0.95;
-    
-    // They grow at a rate based on their intensity
-    size += height * intensity * 0.01;
-
-    // If the particle is still alive, draw it
-    if (intensity >= 1) {
-      blendMode(ADD);
-      tint(hue, 50, intensity);
-      image(texture, x - size/2, y - size/2, size, size);
-    }
-  }
-};
-
+// Globals
 OPC opc;
-PImage texture;
-Ring rings[];
-float smoothX, smoothY;
-boolean f = false;
 
-void setup()
-{
-  // Setup sketch
-  size(640, 640, P3D);
-  colorMode(HSB, 100);
-  
-  // Load images
-  texture = loadImage("ring.png");
+// Testing
+int num = 60;
+int[] x = new int[num];
+int[] y = new int[num];
 
-  // Setup OPC connection
+
+// Seup
+void setup() {
+  // Size
+  size(640, 640);
+
+  // Connect to the local instance of fcserver. You can change this line to connect to another computer's fcserver
   opc = new OPC(this, "127.0.0.1", 7890);
-  for(int i = 0; i < 10; i++) {
-    opc.ledStrip(i * 62, 62, width / 2, i * height / 10.0 + (height / 20.0), width / 62.0, 0, false);
+  for (int i = 0; i < 10; i++) {
+    opc.ledStrip(i * 62, 62, width / 2, height - (i * height / 10.0 + (height / 20.0)), width / 62.0, 0, false);
   }
 
-  // We can have up to 100 rings. They all start out invisible.
-  rings = new Ring[100];
-  for (int i = 0; i < rings.length; i++) {
-    rings[i] = new Ring();
-  }
-}
+  // Make the status LED quiet
+  opc.setStatusLed(false);
 
-void draw()
-{
+  // Reset background
   background(0);
 
-  // Smooth out the mouse location. The smoothX and smoothY variables
-  // move toward the mouse without changing abruptly.
-  float prevX = smoothX;
-  float prevY = smoothY;
-  smoothX += (mouseX - smoothX) * 0.1;
-  smoothY += (mouseY - smoothY) * 0.1;
+  // Testing
+}
 
-  // At every frame, randomly respawn one ring
-  rings[int(random(rings.length))].respawn(prevX, prevY, smoothX, smoothY);
+void draw() {
+  background(0);
 
-  // Give each ring a chance to redraw and update
-  for (int i = 0; i < rings.length; i++) {
-    rings[i].draw();
-  }
+  // Testing
+  
 }
