@@ -5,6 +5,7 @@
 
 export USER=pi
 export HOME=/home/pi
+export DISPLAY=:1
 
 if [ -e "$HOME/.bashrc" ]
 then
