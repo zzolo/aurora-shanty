@@ -11,9 +11,8 @@ then
   source $HOME/.bashrc
 fi
 
-
 export DISPLAY=:1
-PROCESSING_CMD=`which processing-java`
+PROCESSING_CMD=/usr/local/bin/processing-java
 
 # Start VNC.  We want to make sure this happens
 /home/pi/aurora-shanty/deploy/tightvnc.sh > /home/pi/aurora.log 2>&1;
