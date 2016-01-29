@@ -1,89 +1,76 @@
+// NOTES
+// * Pixel value
+// * Lights blur next to each other (blue light, red light has purple between them)
+// * Transparency dims
+// * Horizontal movement is nice
+
+// Globals
 OPC opc;
-PShader blur;
-PGraphics src;
-PGraphics pass1, pass2;
 
-void setup()
-{
-  size(640, 640, P2D);
+// Testing
+int num = 60;
+int[] x = new int[num];
+int[] y = new int[num];
 
-  blur = loadShader("blur.glsl");
-  blur.set("blurSize", height / 8);
-  blur.set("sigma", 10.0f);
 
-  src = createGraphics(width, height, P3D);
+int backgroundValue = 0;
 
-  pass1 = createGraphics(width, height, P2D);
-  pass1.noSmooth();
+int redValue = 255;
+int blueValue = 0;
+int greenValue = 0;
 
-  pass2 = createGraphics(width, height, P2D);
-  pass2.noSmooth();
+
+
+// Seup
+void setup() {
+  // Size
+  size(640, 640);
 
   // Connect to the local instance of fcserver. You can change this line to connect to another computer's fcserver
   opc = new OPC(this, "127.0.0.1", 7890);
-for(int i = 0; i < 10; i++) {
+  for (int i = 0; i < 10; i++) {
     opc.ledStrip(i * 62, 62, width / 2, height - (i * height / 10.0 + (height / 20.0)), width / 62.0, 0, false);
   }
 
   // Make the status LED quiet
   opc.setStatusLed(false);
+
+  // Reset background
+  background(0);
+
+  // Testing
 }
 
-void draw()
-{
-  float t = millis() * 0.001;
-  randomSeed(0);
+void draw() {
+  background(redValue, greenValue, blueValue);
+   //start at red and go to yellow
+   if( greenValue<255 && redValue==255 && blueValue==0){
+     greenValue++;
+    }
 
-  src.beginDraw();
-  src.noStroke();
-  src.background(255, 0, 0);
-  src.fill(255, 150);
-  src.blendMode(NORMAL);
+    //go from yellow to pure green
+    if(greenValue == 255 && redValue>0){
+      //redToGreen = false;
+     redValue--;
+    }
 
-  src.directionalLight(255, 255, 255, -1, 0, 0.4);
-  src.directionalLight(50, 50, 50, -1, 0, 0.2);
-  src.directionalLight(50, 50, 50, -1, 0, 0);
-  src.directionalLight(255, 0, 0, 1, 0, 0);
+    //go from green to cyan/bluish-green
+    if(redValue==0 && greenValue==255 && blueValue<255){
 
-  // Lots of rotating cubes
-  for (int i = 0; i < 80; i++) {
-    src.pushMatrix();
+      blueValue++;
+    }
 
-    // This part is the chaos demon.
-    src.translate(map(noise(random(1000), t * 0.07), 0, 1, -width, width*2),
-      map(noise(random(1000), t * 0.07), 0, 1, -height, height*2), 0);
+    //go from bluish-green to blue
+    if(blueValue==255 && greenValue>0){
+     greenValue--;
+    }
+   // go from blue to violet
+    if(redValue < 255 && greenValue==0 && blueValue==255){
+      redValue++;
 
-    // Progression of time
-    src.rotateY(t * 0.4 + randomGaussian());
-    src.rotateX(t * 0.122222 + randomGaussian());
-
-    // But of course.
-    src.box(height * abs(0.2 + 0.2 * randomGaussian()));
-    src.popMatrix();
+    }
+    //go from violet to red
+  if(redValue == 255 && blueValue>0){
+    blueValue--;
   }
-
-  // Brighten if we care
-  /*
-  src.noLights();
-  src.blendMode(ADD);
-  src.fill(40, 0, 0);
-  src.rect(0, 0, width, height);
-  */
-
-  // Separable blur filter
-  src.endDraw();
-
-  blur.set("horizontalPass", 0);
-  pass1.beginDraw();
-  pass1.shader(blur);
-  pass1.image(src, 0, 0);
-  pass1.endDraw();
-
-  blur.set("horizontalPass", 1);
-  pass2.beginDraw();
-  pass2.shader(blur);
-  pass2.image(pass1, 0, 0);
-  pass2.endDraw();
-
-  image(pass2, 0, 0);
 }
