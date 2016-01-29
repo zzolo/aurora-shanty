@@ -5,16 +5,15 @@ Code and documentation for the [Aurora Shanty](http://aurora-shanty.tumblr.com/)
 ## Raspberry Pi deploy
 
 * Get [Raspbian](https://www.raspberrypi.org/downloads/raspbian/)
-* Update settings
+* System settings
+    * Expand filesystem
     * Boot to CLI
     * Enable I2C
 * (optional) [WiFi setup](https://www.raspberrypi.org/documentation/configuration/wireless/wireless-cli.md)
 * (optional) [Mausberry power switch](http://mausberry-circuits.myshopify.com/pages/setup)
-* `sudo apt-get update && sudo apt-get upgrade`
-* `sudo apt-get install netatalk git upstart default-jdk`
-
+* `sudo apt-get update && sudo apt-get upgrade` (can take a while)
+* `sudo apt-get install netatalk git`
 * `curl https://processing.org/download/install-arm.sh | sudo sh`
-
 * `cd /home/pi && git clone https://github.com/scanlime/fadecandy.git`
 * `cd /home/pi && git clone https://github.com/zzolo/aurora-shanty.git && cd aurora-shanty`
 * `sudo cp ./deploy/fcserver.conf /etc/init/fcserver.conf`
