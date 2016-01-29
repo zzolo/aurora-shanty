@@ -3,6 +3,7 @@
 # vncserver -kill :1
 
 
+export USER=pi
 export HOME=/home/pi
 
 if [ -e "$HOME/.bashrc" ]

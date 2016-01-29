@@ -1,5 +1,6 @@
 fcserver/*
 fcserver*.zip
+aurora_output
 
 # General git ignores
 node_modules/

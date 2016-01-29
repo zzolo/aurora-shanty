@@ -21,9 +21,9 @@ Code and documentation for the [Aurora Shanty](http://aurora-shanty.tumblr.com/)
     * `sudo /etc/init.d/fcserver start`
     * `sudo update-rc.d fcserver defaults`
 * VNC setup.  This is needed so Processing thinks there is a screen.  How this is setup requires that a user does this and is logged in.  [Reference](https://learn.adafruit.com/adafruit-raspberry-pi-lesson-7-remote-control-with-vnc/)
-    * Add to cron: '@reboot /home/pi/aurora-shanty/deploy/tightvnc.sh > /home/pi/tightvnc.log 2>&1'
+    * Run once to setup password: `vncserver :1`
 * Processing sketch
-    * `processing-java --sketch= --output= --force --run`
+    * Add to cron: `@reboot $HOME/.profile; /home/pi/aurora-shanty/deploy/aurora.sh > /home/pi/aurora.log 2>&1`
 
 
 ## Notes/links
