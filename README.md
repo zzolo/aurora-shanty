@@ -12,12 +12,17 @@ Code and documentation for the [Aurora Shanty](http://aurora-shanty.tumblr.com/)
 * (optional) [WiFi setup](https://www.raspberrypi.org/documentation/configuration/wireless/wireless-cli.md)
 * (optional) [Mausberry power switch](http://mausberry-circuits.myshopify.com/pages/setup)
 * `sudo apt-get update && sudo apt-get upgrade` (can take a while)
-* `sudo apt-get install netatalk git`
+* `sudo apt-get install netatalk git tightvncserver`
 * `curl https://processing.org/download/install-arm.sh | sudo sh`
 * `cd /home/pi && git clone https://github.com/scanlime/fadecandy.git`
 * `cd /home/pi && git clone https://github.com/zzolo/aurora-shanty.git && cd aurora-shanty`
-* `sudo cp ./deploy/fcserver.conf /etc/init.d/fcserver && sudo chmod +x /etc/init.d/fcserver`
-* `sudo /etc/init.d/fcserver start`
+* FCServer startup
+    * `sudo cp ./deploy/fcserver.conf /etc/init.d/fcserver && sudo chmod +x /etc/init.d/fcserver`
+    * `sudo /etc/init.d/fcserver start`
+    * `sudo update-rc.d fcserver defaults`
+* VNC setup.  This is needed so Processing thinks there is a screen.  How this is setup requires that a user does this and is logged in.  [Reference](https://learn.adafruit.com/adafruit-raspberry-pi-lesson-7-remote-control-with-vnc/)
+    * `mkdir -p /home/pi/.config/autostart/ && cp ./deploy/tightvnc.desktop /home/pi/.config/autostart/tightvnc.desktop`
+    * Start now: `vncserver :1`
 
 
 ## Notes/links
