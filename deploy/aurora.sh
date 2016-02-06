@@ -11,7 +11,7 @@ then
   source $HOME/.bashrc
 fi
 
-export DISPLAY=:1
+#export DISPLAY=:1
 PROCESSING_CMD=/usr/local/bin/processing-java
 
 # Start VNC.  We want to make sure this happens
