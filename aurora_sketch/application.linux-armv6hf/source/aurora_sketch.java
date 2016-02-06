@@ -64,6 +64,8 @@ public void setup() {
 
   // Reset background
   background(0);
+  
+  PApplet.parseInt(DISABLE_TEXTURE_MIPMAPS);
 }
 
 public void draw() {

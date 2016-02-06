@@ -45,6 +45,8 @@ void setup() {
 
   // Reset background
   background(0);
+  
+  int(DISABLE_TEXTURE_MIPMAPS);
 }
 
 void draw() {
