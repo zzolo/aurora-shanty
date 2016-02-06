@@ -64,9 +64,9 @@ void draw() {
     }
   }
 
-  // Delay
-  //delay(100);
-  println(frameRate);
+  if (TEST) {
+    println(frameRate);
+  }
 }
 
 // Spot view.  Use image, as drawing ellipses for a radial alpha gradient
