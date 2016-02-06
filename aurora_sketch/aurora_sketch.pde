@@ -41,7 +41,7 @@ void setup() {
   opc.setStatusLed(false);
   
   // Get images
-  spot = loadImage("spot.png");
+  spot = requestImage("spot.png");
 
   // Reset background
   background(0);
@@ -55,7 +55,10 @@ void draw() {
   lighting();
 
   // Spot 
-  spot();
+  
+  if (spot.width > 0) {
+    drawSpot();
+  }
 
   // Add light lines
   if (TEST) {
@@ -71,7 +74,7 @@ void draw() {
 
 // Spot view.  Use image, as drawing ellipses for a radial alpha gradient
 // is very intensive for some reason.
-void spot() {
+void drawSpot() {
   float noiseJitter = 0.0015;
   
   // Noise radius
