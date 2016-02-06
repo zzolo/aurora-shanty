@@ -8,25 +8,28 @@
 int GRAD_VERT = 1;
 int GRAD_HOR = 2;
 float EASING = 0.01;
-boolean TEST = false;
+boolean TEST = true;
 
 // Globals
 OPC opc;
-float spotX;
-float spotXTarget = 0;
-float spotY;
-float spotYTarget = 0;
-float spotR;
-float spotRTarget = 0;
+float spotX = 200;
+float spotXTarget = 200;
+float spotY = 200;
+float spotYTarget = 200;
+float spotR = 200;
+float spotRTarget = 200;
 float rainbowYOffset = 0;
 float rainbowYOffsetTarget = 0;
+float rainbowA = 0;
+float rainbowATarget = 0;
+PImage spot;
 
 
 // Seup
 void setup() {
   // Size
-  //size(640, 640, P2D);
-  size(640, 640);
+  size(640, 640, P2D);
+  //size(640, 640);
 
   // Connect to the local instance of fcserver. You can change this line to connect to another computer's fcserver
   opc = new OPC(this, "127.0.0.1", 7890);
@@ -36,6 +39,9 @@ void setup() {
 
   // Make the status LED quiet
   opc.setStatusLed(false);
+  
+  // Get images
+  spot = loadImage("spot.png");
 
   // Reset background
   background(0);
@@ -60,51 +66,73 @@ void draw() {
 
   // Delay
   //delay(100);
+  println(frameRate);
 }
 
-// Spot view
+// Spot view.  Use image, as drawing ellipses for a radial alpha gradient
+// is very intensive for some reason.
 void spot() {
-  int change = 5;
+  float noiseJitter = 0.0015;
   
-  // Determine where and how to go
-  if (spotYTarget - spotY < change && spotYTarget - spotY > (change * -1)) {
-    //print("changeX");
-    spotYTarget = random(-30, height + 30);
-  }
-  spotY += (spotYTarget - spotY) * EASING * 2;
+  // Noise radius
+  spotR = (noise(frameCount * noiseJitter) * width * 1.5) + (width / 2);
   
-  if (spotXTarget - spotX < change && spotXTarget - spotX > (change * -1)) {
-    //print("changeY");
-    spotXTarget = random(-30, width + 30);
-  }
-  spotX += (spotXTarget - spotX) * EASING * 2;
+  // Noise X and Y
+  spotX = noise(frameCount * noiseJitter) * width;
+  spotY = noise(1 + frameCount * noiseJitter) * height;
   
-  if (spotRTarget - spotR < change && spotRTarget - spotR > (change * -1)) {
-    //print("changeR");
-    spotRTarget = random(width / 2, width * 4);
-  }
-  spotR += (spotRTarget - spotR) * EASING * 2;
+  // Some helpful values
+  float s = spotR / 640;
   
-  // Draw
-  radGradient(spotX, spotY, int(spotR), color(0, 0, 0, 1), color(0, 0, 0, 255));
+  // Draw/place
+  pushMatrix();
+  translate(spotX, spotY);
+  scale(s);
+  image(spot, -320, -320);
+  fill(0, 0, 0);
+  noStroke();
+  
+  // Fill space around (top, bottom, left, right)
+  rect(width * -10, height * -10, width * 10 * 4, height * 10 - 318);
+  rect(width * -10, 318, width * 10 * 4, height * 10);
+  rect(width * -10, -322, width * 10 - 318, height * 10);
+  rect(318, -322, width * 10, height * 10);
+  
+  popMatrix();
 }
 
 // Rainbow lighting
 void lighting() {
   // Determine where and how to go
   if (rainbowYOffsetTarget - rainbowYOffset < 1 && rainbowYOffsetTarget - rainbowYOffset > -1) {
-    rainbowYOffsetTarget = random(-30, 30);
+    rainbowYOffsetTarget = random(-60, 60);
   }
   
   // Move to target
   rainbowYOffset += (rainbowYOffsetTarget - rainbowYOffset) * EASING;
+  
+  // Determine where and how to go
+  if (rainbowATarget - rainbowA < 0.001 && rainbowATarget - rainbowA > -0.001) {
+    rainbowATarget = random(-0.1, 0.1);
+  }
+  rainbowA += (rainbowATarget - rainbowA) * EASING;
+  
+  pushMatrix();
+  translate(-50, 0);
+  rotate(rainbowA);
 
   // Rainbow background
-  rectGradient(0, int((height / 5) * 0 + rainbowYOffset), width, height / 5, color(255, 0, 0), color(255, 255, 0), GRAD_VERT);
-  rectGradient(0, int((height / 5) * 1 + rainbowYOffset), width, height / 5, color(255, 255, 0), color(0, 255, 0), GRAD_VERT);
-  rectGradient(0, int((height / 5) * 2 + rainbowYOffset), width, height / 5, color(0, 255, 0), color(0, 255, 255), GRAD_VERT);
-  rectGradient(0, int((height / 5) * 3 + rainbowYOffset), width, height / 5, color(0, 255, 255), color(0, 0, 255), GRAD_VERT);
-  rectGradient(0, int((height / 5) * 4 + rainbowYOffset), width, height / 5, color(0, 0, 255), color(255, 0, 255), GRAD_VERT);
+  fill(255, 0, 0);
+  rect(0, int((height / 5) * -1 + rainbowYOffset), width * 1.5, height / 5);
+  rectGradient(0, int((height / 5) * 0 + rainbowYOffset), width * 1.5, height / 5, color(255, 0, 0), color(255, 255, 0), GRAD_VERT);
+  rectGradient(0, int((height / 5) * 1 + rainbowYOffset), width * 1.5, height / 5, color(255, 255, 0), color(0, 255, 0), GRAD_VERT);
+  rectGradient(0, int((height / 5) * 2 + rainbowYOffset), width * 1.5, height / 5, color(0, 255, 0), color(0, 255, 255), GRAD_VERT);
+  rectGradient(0, int((height / 5) * 3 + rainbowYOffset), width * 1.5, height / 5, color(0, 255, 255), color(0, 0, 255), GRAD_VERT);
+  rectGradient(0, int((height / 5) * 4 + rainbowYOffset), width * 1.5, height / 5, color(0, 0, 255), color(255, 0, 255), GRAD_VERT);
+  fill(255, 0, 255);
+  rect(0, int((height / 5) * 5 + rainbowYOffset), width * 1.5, height / 5);
+  
+  popMatrix();
 }
 
 // Create a rectangle gradient
@@ -134,17 +162,15 @@ void rectGradient(int x, int y, float w, float h, color c1, color c2, int axis )
 
 
 void radGradient(float x, float y, int radius, color c1, color c2) {
-  for (int r = 0; r < radius; r ++) {
-    float inter = map(r, 0, radius, 0, 1);
+  noFill();
+  int step = int(radius / 5);
+  int start = radius / 2;
+    
+  for (int r = start; r < radius; r = r + step) {
+    float inter = map(r, start, radius, 0, 1);
     color c = lerpColor(c1, c2, inter);
-    noFill();
-    strokeWeight(2);
+    strokeWeight(step);
     stroke(c);
-    ellipse(x, y, r, r);
-  }
-
-  stroke(0, 0, 0);
-  for (int r = radius; r < height * 3; r ++) {
     ellipse(x, y, r, r);
   }
 }
