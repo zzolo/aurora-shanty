@@ -8,7 +8,7 @@
 int GRAD_VERT = 1;
 int GRAD_HOR = 2;
 float EASING = 0.01;
-boolean TEST = true;
+boolean TEST = false;
 
 // Globals
 OPC opc;
