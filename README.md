@@ -12,6 +12,18 @@ Code and documentation for the [Aurora Shanty](http://aurora-shanty.tumblr.com/)
 * (optional) [WiFi setup](https://www.raspberrypi.org/documentation/configuration/wireless/wireless-cli.md)
 * (optional) [Mausberry power switch](http://mausberry-circuits.myshopify.com/pages/setup)
 * `sudo apt-get update && sudo apt-get upgrade` (can take a while)
+
+sudo apt-get install libgl1-mesa-dri
+
+
+/home/pi/.xsessionrc
+# Start X11VNC
+x11vnc -bg -nevershared -forever -tightfilexfer -nopw -display :0
+
+/boot/config.txt
+Uncomment: hdmi_force_hotplug=1 hdmi_group=2 hdmi_mode=16
+
+
 * `sudo apt-get install netatalk git tightvncserver`
 * `curl https://processing.org/download/install-arm.sh | sudo sh`
 * `cd /home/pi && git clone https://github.com/scanlime/fadecandy.git`

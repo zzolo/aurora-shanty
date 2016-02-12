@@ -21,6 +21,9 @@ public class OPC
   byte firmwareConfig;
   String colorCorrection;
   boolean enableShowLocations;
+  
+  int lightHeight = 0;
+  int lightWidth = 0;
 
   OPC(PApplet parent, String host, int port)
   {
@@ -205,6 +208,24 @@ public class OPC
       dispose();
     }
   }
+  
+  // Set light height for drawing of pixels.  Use -1 if you just
+  // want to get the value.
+  int setLightHeight(int lheight) {
+    if (lheight > -1) {
+      this.lightHeight = lheight;
+    }
+    return this.lightHeight;
+  }
+  
+  // Set light width for drawing of pixels.  Use -1 if you just
+  // want to get the value.
+  int setLightWidth(int lwidth) {
+    if (lwidth > -1) {
+      this.lightWidth = lwidth;
+    }
+    return this.lightWidth;
+  }
 
   // Automatically called at the end of each draw().
   // This handles the automatic Pixel to LED mapping.
@@ -235,6 +256,7 @@ public class OPC
     for (int i = 0; i < numPixels; i++) {
       int pixelLocation = pixelLocations[i];
       int pixel = pixels[pixelLocation];
+      color c = pixels[pixelLocation];
 
       packetData[ledAddress] = (byte)(pixel >> 16);
       packetData[ledAddress + 1] = (byte)(pixel >> 8);
@@ -243,6 +265,24 @@ public class OPC
 
       if (enableShowLocations) {
         pixels[pixelLocation] = 0xFFFFFF ^ pixel;
+        
+        // Draw heights
+        for (int h = 1; h < lightHeight; h++) {
+          // Draw widths
+          for (int w = 1; w <= lightWidth / 2; w++) {
+            int location = pixelLocation - (width * h) - w;
+            
+            if (location >= 0 && location < width * height) {
+              pixels[location] = c;
+            }
+            
+            location = pixelLocation - (width * h) + w;
+            
+            if (location >= 0 && location < width * height) {
+              pixels[location] = c;
+            }
+          }
+        }
       }
     }
 
