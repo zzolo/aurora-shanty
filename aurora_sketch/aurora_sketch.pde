@@ -8,7 +8,7 @@
 int GRAD_VERT = 1;
 int GRAD_HOR = 2;
 boolean TEST = false;
-boolean SHOW_FRAMERATE = true;
+boolean SHOW_FRAMERATE = false;
 int FR = 25;
 
 
