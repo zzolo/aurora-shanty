@@ -7,7 +7,8 @@
 // Constants
 int GRAD_VERT = 1;
 int GRAD_HOR = 2;
-boolean TEST = true;
+boolean TEST = false;
+boolean SHOW_FRAMERATE = true;
 int FR = 25;
 
 
@@ -129,7 +130,7 @@ void draw() {
   }
   
   // Frame rate
-  if (TEST) {
+  if (TEST || SHOW_FRAMERATE) {
     println(frameRate);
   }
 }
